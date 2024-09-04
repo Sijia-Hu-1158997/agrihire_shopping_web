@@ -1,0 +1,33 @@
+{% extends 'base_admin.html' %}
+{% block admin_content %}
+<div class="raw">
+<div class="col-6">
+    <div class="portfolio-info">
+        <h3>Lesson Attendance</h3>
+        <ul>
+          {% for lesson in lesson_courses%}
+              {% if not lesson.is_deleted %}
+            <li><strong>{{lesson.title}}</strong> <span>
+                    <a href="{{url_for('web.lesson_attendance', lesson_id=lesson.id)}}" class="btn btn-info">View Attendance</a>
+                  </span></li>
+              {% endif %}
+          {%endfor%}
+        </ul>
+    </div>
+</div>
+
+<div class="col-6">
+    <div class="portfolio-info">
+        <h3>Customer Checkout</h3>
+        {% for workshop in workshop_courses%}
+              {% if not workshop.is_deleted %}
+            <li><strong>{{workshop.title}}</strong> <span>
+                    <a href="{{url_for('web.workshop_attendance', workshop_id=workshop.id)}}" class="btn btn-info">View Attendance</a>
+                  </span></li>
+              {% endif %}
+          {%endfor%}
+    </div>
+</div>
+</div>
+
+{% endblock %}

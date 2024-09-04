@@ -1,0 +1,144 @@
+{% extends 'base_admin.html' %}
+{% block admin_content %}
+
+
+<div class="row page-titles mx-0">
+  <div class="col p-md-0">
+      <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="{{ url_for('web.admin_home') }}">Dashboard</a></li>
+          <li class="breadcrumb-item active"><a href="{{ url_for('web.home') }}">Home</a></li>
+      </ol>
+  </div>
+</div>
+
+<section class="container-fluid">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Add Equipments</h5>
+          <!-- Add inventory Form -->
+              <form action="{{ url_for('web.add_inventory') }}" method="POST" enctype="multipart/form-data">
+
+                <div class="row mb-3">
+                  <label for="store_id" class="col-md-4 col-lg-3 col-form-label">Store</label>
+                  <div class="col-md-8 col-lg-9">
+                    <select class="form-control" name="store_id" id="store_id" required>
+                      {% for store in stores %}
+                      <option value="{{ store.id }}">{{ store.name }}</option>
+                      {% endfor %}
+                    </select>
+                  </div>
+                </div>
+
+                <div class="row mb-3">
+                  <label for="type_id" class="col-md-4 col-lg-3 col-form-label">Type</label>
+                  <div class="col-md-8 col-lg-9">
+                    <select class="form-control" name="type_id" id="type_id" required>
+                      {% for type in types %}
+                        {% for item in types_and_categories if item.type_id == type.id %}
+                        <option value="{{ type.id }}">{{ item.type_name }} of {{ item.category_name }}</option>
+                        {% endfor %}
+                      {% endfor %}
+                    </select>
+                  </div>
+                </div>
+
+                <div class="row mb-3">
+                  <label for="name" class="col-md-4 col-lg-3 col-form-label">Name of Equipments</label>
+                  <div class="col-md-8 col-lg-9">
+                    <input name="name" type="text" class="form-control" id="name" required>
+                  </div>
+                </div>
+
+                <div class="row mb-3">
+                  <label for="date_of_purchase" class="col-md-4 col-lg-3 col-form-label">Date of Purchase</label>
+                  <div class="col-md-8 col-lg-9">
+                    <input name="date_of_purchase" type="date" class="form-control" id="date_of_purchase"
+                    required>
+                  </div>
+                </div>
+
+                <div class="row mb-3">
+                  <label for="quantity" class="col-md-4 col-lg-3 col-form-label">Quantity</label>
+                  <div class="col-md-8 col-lg-9">
+                    <input name="quantity" type="number" class="form-control" id="quantity" placeholder="Please enter the quantity"
+                      required>
+                  </div>
+                </div>
+
+                <!-- <div class="row mb-3">
+                  <label for="price" class="col-md-4 col-lg-3 col-form-label">
+                    {% if me.role == 'admin' %}Selling Price{% else %}Purchase Price{% endif %}
+                  </label>
+                  <div class="col-md-8 col-lg-9">
+                    <input name="price" type="number" class="form-control" id="price" placeholder="Please enter the price">
+                  </div>
+                </div> -->
+                
+                {% if me.role == 'admin' %}
+                <div class="row mb-3">
+                  <label for="cost" class="col-md-4 col-lg-3 col-form-label">Individual Cost</label>
+                  <div class="col-md-8 col-lg-9">
+                    <input name="cost" type="number" class="form-control" id="cost" placeholder="Please enter the cost"
+                      required>
+                  </div>
+                </div>
+                {% endif %}
+
+                <!-- {% if me.role == 'admin' %}
+                <div class="row mb-3">
+                  <label for="min_hire_period" class="col-md-4 col-lg-3 col-form-label">Minimum Hire Period</label>
+                  <div class="col-md-8 col-lg-9">
+                    <input name="min_hire_period" type="number" class="form-control" id="min_hire_period" placeholder="Please enter the minimum hire period">
+                </div>
+
+                <div class="row mb-3">
+                  <label for="max_hire_period" class="col-md-4 col-lg-3 col-form-label">Maximum Hire Period</label>
+                  <div class="col-md-8 col-lg-9">
+                    <input name="max_hire_period" type="number" class="form-control" id="max_hire_period" placeholder="Please enter the maximum hire period">
+                </div>
+                {% endif %} -->
+
+                <div class="row mb-3">
+                  <label for="image" class="col-md-4 col-lg-3 col-form-label">Image</label>
+                  <div class="col-md-8 col-lg-9">
+                    <input name="image" type="file" class="form-control" id="image">
+                  </div>
+                </div>
+
+                <div class="row mb-3">
+                  <label for="specifications" class="col-md-4 col-lg-3 col-form-label">Specifications</label>
+                  <div class="col-md-8 col-lg-9">
+                    <textarea name="specifications" class="form-control" id="specifications" rows="3" placeholder="Optional"></textarea>
+                  </div>
+                </div>
+
+                <div class="text-center">
+                  <button type="submit" class="btn btn-primary">Add Equipments</button>
+                </div>
+              </form><!-- End add inventory Form -->
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+</section>
+
+<script>
+  // Get today's date
+  var today = new Date();
+  var dd = String(today.getDate()).padStart(2, '0');
+  var mm = String(today.getMonth() + 1).padStart(2, '0'); // January is 0!
+  var yyyy = today.getFullYear();
+
+  // Format the date as yyyy-mm-dd (required by the input type="date")
+  var formattedDate = yyyy + '-' + mm + '-' + dd;
+
+  // Set the input field's value to today's date
+  document.getElementById("date_of_purchase").value = formattedDate;
+</script>
+
+{% endblock %}

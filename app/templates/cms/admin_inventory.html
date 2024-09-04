@@ -1,0 +1,112 @@
+{% extends 'base_admin.html' %}
+{% block admin_content %}
+
+<div class="row page-titles mx-0">
+    <div class="col p-md-0">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="{{ url_for('web.admin_home') }}">Dashboard</a></li>
+          <li class="breadcrumb-item active"><a href="{{ url_for('web.home') }}">Home</a></li>
+        </ol>
+    </div>
+</div>
+<!-- row -->
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                  <div class="d-flex justify-content-between card-body-1">
+                     <h4 class="card-title">Inventory List</h4>
+                     <div class="text-end">
+                      <a href="{{ url_for('web.add_inventory') }}">
+                        <button type="submit" class="btn btn-primary">Add New Equipments</button>
+                      </a>
+                    </div>
+                  </div>
+
+                    <!-- TO DO -->
+                    <!-- <div class="tab-content pt-2">
+                      <form action="{{ url_for('web.inventory_list') }}" method="GET" class="search-form">
+                        <input class="search-form input" type="text" id="search" name="query" placeholder="Search by inventory's serial number or status"
+                          size="50">
+                        <button type="submit" class="btn">Search</button>
+                      </form>
+                    </div> -->
+
+                    <br><p>Click the serial number to check and manage individual equipement.</p>
+                    
+                 
+                     <div class="table-responsive">
+                        <!-- {{ pagination.info }}
+                        {{ pagination.links }} -->
+                        <table class="table table-striped table-bordered zero-configuration">
+                            <thead>
+                              <tr>
+                                <th>No.</th>
+                                <th>Stock Keeping Unit</th>
+                                <th>Category & Type</th>
+                                <th>Store</th>
+                                <th>Status</th>
+                                <th>Date of Purchase</th>
+                                <th>Quantity</th>
+                                <th>Image</th>
+                                <th>Specifications</th>
+                                <th>Actions</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {% for inventory in inventories %}
+                              <tr>
+                                <td>{{ loop.index + pagination.skip }}</td>
+                                <td> <a href="{{url_for('web.see_equipments_in_inventory', id=inventory.id)}}">{{ inventory.inventory_serial_number }}</a></td>
+                                <td>{{ inventory.category_name }} - {{ inventory.type_name }}</td>
+                                <td>{{ inventory.store_name }}</td>
+                                <td>
+                                  {% if not inventory.is_deleted == 1 %}
+                                    {% if inventory.quantity > 0 %}
+                                      In Stock
+                                    {% elif inventory.quantity == 0 %}
+                                      Out of Stock
+                                    {% endif %}
+                                  {% else %}
+                                  Deleted
+                                  {% endif %}
+                                </td>
+                                <td class="nz-date">{{ inventory.date_of_purchase }}</td>
+                                <td>{{ inventory.quantity }}</td>
+                                <td>
+                                  {% if not inventory.image %}
+                                    No Imgae Added
+                                  {% else %}
+                                    <img src="/{{ inventory.image }}" alt="" class="img-fluid">
+                                  {% endif %}
+                                </td>
+                                <td>{{ inventory.specifications }}</td>
+                                <td>
+                                  {% if not inventory.is_deleted %}
+                                  <div class="d-flex gap-1">
+                                    <a href="{{ url_for('web.update_inventory', id=inventory.id) }}" class="btn btn-primary">Edit</a>
+                                    
+                                    <a href="{{url_for('web.delete_inventory', id=inventory.id)}}"
+                                      class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this inventory? All its equipments will be deleted too.')">Delete</a>
+                                  {% else %}
+                                  <div class="align-items">
+                                    <a href="{{url_for('web.delete_inventory', id=inventory.id)}}"
+                                      class="btn btn-success">Restore</a>
+                                  {% endif %}
+
+                                  </div>
+                                </td>
+                              </tr>
+                              {% endfor %}
+                            </tbody>
+                      </table>
+                      {{ pagination.links }}
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+</div>
+
+{% endblock %}

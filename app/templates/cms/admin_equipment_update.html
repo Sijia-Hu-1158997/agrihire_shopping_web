@@ -1,0 +1,104 @@
+{% extends 'base_admin.html' %}
+{% block admin_content %}
+
+<div class="row page-titles mx-0">
+    <div class="col p-md-0">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ url_for('web.admin_home') }}">Dashboard</a></li>
+            <li class="breadcrumb-item active"><a href="{{ url_for('web.home') }}">Home</a></li>
+            <li class="breadcrumb-item active"><a href="{{ url_for('web.inventory_list') }}">Inventory List</a></li>
+        </ol>
+    </div>
+</div>
+
+{% if equipments %}
+
+<!-- row -->
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    
+                     <h4 class="card-title">Update Equipment: {{equipments.equipment_serial_number}}</h4>
+
+                     <form action="{{ url_for('web.update_equipment_details', id=equipments.id)}}" method="POST" enctype="multipart/form-data">
+                        
+                        <div class="row mb-3">
+                            <label class="col-md-4 col-lg-3 col-form-label">Type and Category</label>
+                            {% for item in types_and_categories if item.type_id == equipments.type_id %}
+                            <div class="col-md-8 col-lg-9">{{ item.type_name }} of {{ item.category_name }}</div>
+                            {% endfor %}
+                        </div>
+
+                        <div class="row mb-3">
+                            <label class="col-md-4 col-lg-3 col-form-label">Store</label>
+                            {% for store in stores %}
+                                {% if store.id == equipments.store_id %}
+                                <div class="col-md-8 col-lg-9">{{ store.name }}</div>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+
+                        <div class="row mb-3">
+                            <label class="col-md-4 col-lg-3 col-form-label">Inventory Stock Keeping Unit</label>
+                            {% for inventory in inventories %}
+                                {% if inventory.id == equipments.inventory_id %}
+                                <div class="col-md-8 col-lg-9">{{ inventory.inventory_serial_number }}</div>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+
+
+                        <div class="row mb-3">
+                            <label class="col-md-4 col-lg-3 col-form-label">Equipment Serial Number</label>
+                            <div class="col-md-8 col-lg-9">{{ equipments.equipment_serial_number }}</div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <label for="name" class="col-md-4 col-lg-3 col-form-label">Name</label>
+                            <div class="col-md-8 col-lg-9">
+                              <input name="name" class="form-control" id="name" type="text" value="{{ equipments.name }}">
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                          <label for="status" class="col-md-4 col-lg-3 col-form-label">Status</label>
+                          <div class="col-md-8 col-lg-9">
+                            <select class="form-control" name="status" id="status">
+                                <option value="active" {{ 'selected' if equipments.status == 'active' else '' }}>Active</option>
+                                <option value="repairing" {{ 'selected' if equipments.status == 'repairing' else '' }}>Repairing</option>
+                                <option value="retired" {{ 'selected' if equipments.status == 'retired' else '' }}>Retired</option>
+                            </select>
+                            </select>
+                          </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <label for="details" class="col-md-4 col-lg-3 col-form-label">Details</label>
+                            <div class="col-md-8 col-lg-9">
+                              <input name="details" class="form-control" id="details" value="{{ equipments.details }}">
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <label for="image_path" class="col-md-4 col-lg-3 col-form-label">Image</label>
+                            <div class="col-md-8 col-lg-9">
+                              <input type="file" name="image_path" class="form-control" id="image_path">
+                            </div>
+                        </div>
+            
+                        <div class="text-center">
+                          <a href="{{ url_for('web.equipment_list') }}" class="btn btn-primary">Back</a>
+                          <button type="submit" class="btn btn-primary">Update Equipment</button>
+                        </div>
+                     </form><!-- End Profile Edit Form -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endif %}
+
+{% endblock %}

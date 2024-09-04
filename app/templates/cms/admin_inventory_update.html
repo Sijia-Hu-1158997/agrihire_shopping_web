@@ -1,0 +1,107 @@
+{% extends 'base_admin.html' %}
+{% block admin_content %}
+
+<div class="row page-titles mx-0">
+    <div class="col p-md-0">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="{{ url_for('web.admin_home') }}">Dashboard</a></li>
+          <li class="breadcrumb-item active"><a href="{{ url_for('web.home') }}">Home</a></li>
+          <li class="breadcrumb-item active"><a href="{{ url_for('web.inventory_list') }}">Inventory List</a></li>
+        </ol>
+    </div>
+</div>
+
+{% if inventories %}
+
+<!-- row -->
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    
+                     <h4 class="card-title">Update Inventory: {{inventories.inventory_serial_number}}</h4>
+
+                     <form action="{{ url_for('web.update_inventory', id=inventories.id)}}" method="POST" enctype="multipart/form-data">
+                        
+                        <div class="row mb-3">
+                            <label for="store_id" class="col-md-4 col-lg-3 col-form-label">Store</label>
+                            <div class="col-md-8 col-lg-9">
+                              <select class="form-control" name="store_id" id="store_id">
+                                {% for store in stores %}
+                                  <option value="{{ store.id }}" {% if store.id == inventories.store_id %}selected{% endif %}>{{ store.name }}</option>
+                                {% endfor %}
+                                
+                              </select>
+                            </div>
+                        </div>
+
+
+
+                        <div class="row mb-3">
+                          <label for="type_id" class="col-md-4 col-lg-3 col-form-label">Type</label>
+                          <div class="col-md-8 col-lg-9">
+                              <select class="form-control" name="type_id" id="type_id">
+                                  {% for type in types %}
+                                      {% for item in types_and_categories if item.type_id == type.id %}
+                                          <option value="{{ type.id }}" {% if type.id == inventories.type_id %}selected{% endif %}>
+                                              {{ item.type_name }} of {{ item.category_name }}
+                                          </option>
+                                      {% endfor %}
+                                  {% endfor %}
+                              </select>
+                          </div>
+                        </div>
+                      
+          
+                        <div class="row mb-3">
+                            <label for="date_of_purchase" class="col-md-4 col-lg-3 col-form-label">Date of Purchase</label>
+                            <div class="col-md-8 col-lg-9">
+                              <input name="date_of_purchase" type="date" class="form-control" id="date_of_purchase" value="{{ inventories.date_of_purchase }}">
+                            </div>
+                        </div>
+          
+                        {% if me.role == 'admin' or me.role == 'local_manager' or me.role == 'national_manager' %}
+                        <div class="row mb-3">
+                            <label for="price" class="col-md-4 col-lg-3 col-form-label">Price</label>
+                            <div class="col-md-8 col-lg-9">
+                              <input name="price" type="number" class="form-control" id="price" value="{{ inventories.price }}">
+                            </div>
+                        </div>
+                        {% endif %}
+          
+                        <div class="row mb-3">
+                            <label for="cost" class="col-md-4 col-lg-3 col-form-label">Cost</label>
+                            <div class="col-md-8 col-lg-9">
+                              <input name="cost" type="number" class="form-control" id="cost" value="{{ inventories.cost }}">
+                            </div>
+                        </div>
+          
+                        <div class="row mb-3">
+                            <label for="image" class="col-md-4 col-lg-3 col-form-label">Image</label>
+                            <div class="col-md-8 col-lg-9">
+                              <input name="image" type="file" class="form-control" id="image" value="{{ inventories.image }}">
+                            </div>
+                        </div>
+          
+                        <div class="row mb-3">
+                            <label for="specifications" class="col-md-4 col-lg-3 col-form-label">Specifications</label>
+                            <div class="col-md-8 col-lg-9">
+                              <input name="specifications" type="text" class="form-control" rows="3" id="specifications" value="{{ inventories.specifications }}">
+                            </div>
+                        </div>
+            
+                        <div class="text-center">
+                          <a href="{{ url_for('web.inventory_list') }}" class="btn btn-primary">Back</a>
+                          <button type="submit" class="btn btn-primary">Update Inventory</button>
+                        </div>
+                     </form><!-- End Profile Edit Form -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endif %}
+
+{% endblock %}

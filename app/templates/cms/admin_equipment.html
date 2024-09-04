@@ -1,0 +1,101 @@
+{% extends 'base_admin.html' %}
+{% block admin_content %}
+
+<div class="row page-titles mx-0">
+    <div class="col p-md-0">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ url_for('web.admin_home') }}">Dashboard</a></li>
+            <li class="breadcrumb-item active"><a href="{{ url_for('web.home') }}">Home</a></li>
+        </ol>
+    </div>
+</div>
+<!-- row -->
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                      <div class="d-flex justify-content-between card-body-1">
+                         <h4 class="card-title">Equipment List</h4>
+                      </div>
+                    
+                     <div class="table-responsive">
+                        <table class="table table-striped table-bordered zero-configuration">
+                            <thead>
+                              <tr>
+                                <th>No.</th>
+                                <th>Equipment Serial Number</th>
+                                <th>Category & Type</th>
+                                <th>Name</th>
+                                <th>Store</th>
+                                <th>Inventory Stock Keeping Unit</th>
+                                <th>Status</th>
+                                {% if me.role == 'admin' %}<th>Purchase Price</th>{% endif %}
+                                <!-- <th>Selling Price</th> -->
+                                <th>Hire Period (days)</th>
+                                <th>Hire Price</th>
+                                <th>Details</th>
+                                <th>Image</th>
+                                <th>Hire Records</th>
+                                <th>Service</th>
+                                <th>Actions</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {% for equipment in equipments %}
+                                {% if equipment.status != 'retired' %}
+                              <tr>
+                                <td>{{ loop.index + pagination.skip }}</td>
+                                <td>{{ equipment.equipment_serial_number }}</td>
+                                <td>{{ equipment.category_name }} - {{ equipment.type_name }}</td>
+                                <td>{{ equipment.name }}</td>
+                                <td>{{ equipment.store_name }}</td>
+                                <td>{{ equipment.inventory_serial_number }}</td>
+                                <td>{{ equipment.status|capitalize }}</td>
+
+                                {% if me.role == 'admin' %}<td>${{ equipment.cost }} </td>{% endif %}
+                                <!-- <td>${{ equipment.price }}</td> -->
+                                <td>{{ equipment.min_hire_period }} - {{ equipment.max_hire_period }}</td>
+                                <td>${{ equipment.hire_price }} <!-- Debug print --></td>
+                                <td>{{ equipment.details }}</td>
+                                <td>
+                                  {% if equipment.image_path %}
+                                    <img src="/{{ equipment.image_path }}" alt="" class="img-fluid" width="100" height="100">
+                                  {% elif equipment.inventory_image %}
+                                    <img src="/{{ equipment.inventory_image }}" alt="" class="img-fluid">
+                                  {% else %}
+                                    No Image Added
+                                  {% endif %}
+                                </td>
+
+                                <td><a href="{{ url_for('web.hire_equipment_record', id = equipment.id) }}" class="btn btn-secondary">View Record</a></td>
+                                <td><a href="{{ url_for('web.view_equipment_service_history', equipment_id=equipment.id) }}" class="btn btn-secondary">View Service</a></td>
+                               
+                                <td>
+                                  {% if not equipment.is_deleted %}
+                                  <div class="d-flex gap-1">
+                                    <a href="{{ url_for('web.update_equipment_details', id=equipment.id) }}" class="btn btn-primary">Edit</a>
+                                    <a href="{{ url_for('web.delete_equipment', id=equipment.id) }}"
+                                      class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this equipment?')">Delete</a>
+                                  {% else %}
+                                  <div class="align-items">
+                                    <a href="{{ url_for('web.delete_equipment', id=equipment.id) }}"
+                                      class="btn btn-success">Restore</a>
+                                  {% endif %}
+
+                                  </div>
+                                </td>
+                              </tr>
+                                {% endif %}
+                              {% endfor %}
+                            </tbody>
+                      </table>
+                      {{ pagination.links }}
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+</div>
+
+{% endblock %}

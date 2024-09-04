@@ -1,0 +1,34 @@
+<!-- inventory_settings.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventory Settings</title>
+</head>
+<body>
+    <h1>Inventory Settings</h1>
+
+    <h2>Manage Category Names</h2>
+    <form action="/update_category" method="POST">
+        <label for="category_name">Category Name:</label>
+        <input type="text" id="category_name" name="category_name" required>
+        <button type="submit">Add Category</button>
+    </form>
+
+    <h3>Existing Categories:</h3>
+    <ul>
+        <!-- Display existing categories here -->
+        {% for category in categories %}
+            <li>{{ category }}</li>
+        {% endfor %}
+    </ul>
+
+    <!-- <h2>Manage Shipping Prices</h2> -->
+    <!-- Shipping price management form -->
+
+    <h2>Manage Hire Periods</h2>
+    <!-- Hire period management form -->
+</body>
+</html>

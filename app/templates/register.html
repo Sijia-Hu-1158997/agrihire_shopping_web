@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>Agri Hire - Register</title>
+    <link rel="shortcut icon" type="image/png" href="static/img/favicon.png">
+
+    <link href="static/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="static/css/app.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <section class="position-fixed top-6 end-1 z-index-2">
+        <!--handle messages-->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        {% for category, message in messages %}
+        <div class="alert alert-{{ category }} alert-dismissible text-{{ category }}" role="alert">
+            <span class="text-sm">{{ message }}</span>
+            <button type="button" class="btn-close text-lg py-3 opacity-10" data-bs-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true"></span>
+            </button>
+        </div>
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
+    </section>
+
+    <main class="d-flex w-100" id="main">
+        <div class="d-flex w-100" style="background-color: rgba(0, 0, 0, 0.45);">
+
+
+            <div class="container d-flex flex-column">
+                <div class="row vh-100">
+                    <div class="col-sm-10 col-md-8 col-lg-6 col-xl-5 mx-auto d-table h-100">
+                        <div class="d-table-cell align-middle">
+
+                            <div class="text-center mt-4">
+                                <h1 class="h2">Get started for shopping</h1>
+                                <p class="lead">
+                                    Create your account and unclock the best shopping experience.
+                                </p>
+                            </div>
+
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="m-sm-3">
+                                        <!-- step 0 -->
+                                        {% if me.onboarding == 0 or not me.onboarding %}
+                                        <!-- step 1 -->
+                                        <form method="post" action="{{url_for('web.register_step_init')}}">
+                                            <p class="text">STEP 1 OF 2</p>
+                                            <div class="mb-3">
+                                                <label class="form-label">Username</label>
+                                                <input class="form-control form-control-lg" type="text" name="username"
+                                                    id="username" placeholder="Enter your username" required />
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label">Date of Birth</label>
+                                                <input class="form-control form-control-lg" type="date"
+                                                    name="date_of_birth" id="date_of_birth" required />
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label">Email</label>
+                                                <input class="form-control form-control-lg" type="email" name="email"
+                                                    id="email" placeholder="Enter your email" required />
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label">Password</label>
+                                                <input class="form-control form-control-lg" type="password"
+                                                    name="password" id="password"
+                                                    placeholder="Password (mix of 8 chars & types)" required />
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label">Confirm Password</label>
+                                                <input class="form-control form-control-lg" type="password"
+                                                    name="confirm_password" id="confirm_password"
+                                                    placeholder="Confirm your password" required />
+                                            </div>
+                                            <div class="d-grid gap-2 mt-3">
+                                                <button class="btn btn-lg btn-primary" type="submit">Next</button>
+                                            </div>
+                                        </form>
+
+                                        {% endif %}
+
+                                        <!-- step 1 -->
+                                        {% if me.onboarding == 1 %}
+                                        <form method="post" action="{{url_for('web.register_step_one')}}">
+                                            <p class="text">STEP 2 OF 2</p>
+                                            <div class="mb-3">
+                                                <label class="form-label">Title</label>
+                                                <select class="form-select form-select-lg" name="title" id="title"
+                                                    required>
+                                                    <option value="Mr">Mr</option>
+                                                    <option value="Mrs">Mrs</option>
+                                                    <option value="Miss">Miss</option>
+                                                </select>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label">First Name</label>
+                                                <input class="form-control form-control-lg" type="text"
+                                                    name="first_name" id="first_name"
+                                                    placeholder="Enter your first name" required />
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label">Last Name</label>
+                                                <input class="form-control form-control-lg" type="text" name="last_name"
+                                                    id="last_name" placeholder="Enter your last name" required />
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label">Phone</label>
+                                                <input class="form-control form-control-lg" type="tel" name="phone"
+                                                    id="phone" placeholder="Enter your phone number" required />
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label">Address</label>
+                                                <input class="form-control form-control-lg" type="text" name="address"
+                                                    id="address" placeholder="Enter your address" required />
+                                            </div>
+                                            <div class="d-grid gap-2 mt-3">
+                                                <button class="btn btn-lg btn-primary" type="submit">Create your
+                                                    account</button>
+                                            </div>
+                                        </form>
+                                        {% endif %}
+
+                                        <!-- step 3 -->
+                                        {% if me.onboarding == 2 %}
+                                        <div class="d-grid gap-2 mt-3">
+                                            <p>You have registered successfully!</p>
+                                            <a href="{{ url_for('web.home') }}" class="btn btn-lg btn-primary">Start
+                                                your shopping</a>
+                                        </div>
+
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                            {% if me.onboarding == 0 or not me.onboarding %}
+                            <div class="text-center mb-3">
+                                Already have account? <a href="{{ url_for('web.login') }}">Log In</a>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="static/js/app.js"></script>
+
+    <script>
+        window.addEventListener('DOMContentLoaded', (event) => {
+            setTimeout(() => {
+                const alerts = document.querySelectorAll('.alert');
+                alerts.forEach(alert => {
+                    alert.querySelector('button').click();
+                });
+            }, 8000); // hide alert in 8 seconds
+        });
+    </script>
+</body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="/static/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+</html>

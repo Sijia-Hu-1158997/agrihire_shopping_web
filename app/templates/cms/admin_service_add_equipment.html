@@ -1,0 +1,83 @@
+{% extends 'base_admin.html' %}
+{% block admin_content %}
+
+
+<div class="row page-titles mx-0">
+  <div class="col p-md-0">
+      <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="{{ url_for('web.admin_home') }}">Dashboard</a></li>
+          <li class="breadcrumb-item active"><a href="{{ url_for('web.home') }}">Home</a></li>
+          <li class="breadcrumb-item active"><a href="{{ url_for('web.service_list') }}">Service List</a></li>
+      </ol>
+  </div>
+</div>
+
+<section class="container-fluid">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Add an Equipment for the Service</h5>
+          <!-- Add inventory Form -->
+                
+                <form action="{{ url_for('web.add_equipment_for_service', service_id=service_id) }}" method="POST" enctype="multipart/form-data">
+                  <section class="container-fluid">
+                      
+                      <div class="row">
+                          <div class="col-lg-12">
+                              <div class="card">
+                                  <div class="card-body">
+
+                                      <div class="row mb-3">
+                                        <label for="equipment_id" class="col-md-4 col-lg-3 col-form-label">Equipment</label>
+                                        <div class="col-md-8 col-lg-9">
+                                          <select class="form-control" name="equipment_id" id="equipment_id" required>
+                                            {% for equipment in equipments %}
+                                              {% if not equipment.is_deleted and equipment.status == 'active' %}
+                                              <option value="{{ equipment.id }}">{{ equipment.type_name }} of {{ equipment.category_name }} in {{ equipment.store_name }}: {{ equipment.equipment_serial_number }}</option>
+                                              {% endif %}
+                                            {% endfor %}
+                                            </select>
+                                        </div>
+                                      </div>
+              
+                                     <!-- <div class="row mb-3">
+                                      <label for="service_start" class="col-md-4 col-lg-3 col-form-label">Service Start</label>
+                                      <div class="col-md-8 col-lg-9">
+                                        <input name="service_start" type="date" class="form-control" id="service_start" required>
+                                      </div>
+                                    </div> -->
+
+                                    <div class="row mb-3">
+                                      <label for="service_end" class="col-md-4 col-lg-3 col-form-label">Service End Date</label>
+                                      <div class="col-md-8 col-lg-9">
+                                        <input name="service_end" type="date" class="form-control" id="service_end" required>
+                                      </div>
+                                    </div>
+
+                                      <div class="row mb-3">
+                                          <label for="details" class="col-md-4 col-lg-3 col-form-label">Details</label>
+                                          <div class="col-md-8 col-lg-9">
+                                              <textarea name="details" class="form-control" id="details" rows="3" placeholder="Please add equipment details (Optional)"></textarea>
+                                          </div>
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                      <div class="text-center">
+                          <button type="submit" class="btn btn-primary">Add This Equipment for Service</button>
+                      </div>
+                  </section>
+              </form>
+            
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+</section>
+
+
+{% endblock %}

@@ -1,0 +1,118 @@
+{% extends 'base_admin.html' %}
+{% block admin_content %}
+
+<div class="row page-titles mx-0">
+    <div class="col p-md-0">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="{{ url_for('web.admin_home') }}">Dashboard</a></li>
+          <li class="breadcrumb-item active"><a href="{{ url_for('web.home') }}">Home</a></li>
+        </ol>
+    </div>
+</div>
+
+
+
+<!-- row -->
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">Update User</h4>
+
+
+                          <form action="{{ url_for('web.admin_update_user', id=user['id'])}}" method="POST" enctype="multipart/form-data">
+
+                              <div class="row mb-3">
+                                <label for="title" class="col-md-4 col-lg-3 col-form-label">Title</label>
+                                <div class="col-md-8 col-lg-9">
+                                  <select class="form-control" name="title" id="title">
+                                    <option value="Mr" {% if user.title=='Mr' %}selected{% endif %}>Mr</option>
+                                    <option value="Ms" {% if user.title=='Ms' %}selected{% endif %}>Ms</option>
+                                    <option value="Mrs" {% if user.title=='Mrs' %}selected{% endif %}>Mrs</option>
+                                  </select>
+                                </div>
+                              </div>
+
+                              <div class="row mb-3">
+                                <label for="firstName" class="col-md-4 col-lg-3 col-form-label">First Name</label>
+                                <div class="col-md-8 col-lg-9">
+                                  <input name="first_name" type="text" class="form-control" id="firstName" value="{{user.first_name}}">
+                                </div>
+                              </div>
+              
+                              <div class="row mb-3">
+                                <label for="lastName" class="col-md-4 col-lg-3 col-form-label">Last Name</label>
+                                <div class="col-md-8 col-lg-9">
+                                  <input name="last_name" type="text" class="form-control" id="lastName" value="{{user.last_name}}">
+                                </div>
+                              </div>
+              
+
+                              <div class="row mb-3">
+                                <label for="Job" class="col-md-4 col-lg-3 col-form-label">Phone</label>
+                                <div class="col-md-8 col-lg-9">
+                                  <input name="phone" type="text" class="form-control" id="Job" value="{{user.phone}}">
+                                </div>
+                              </div>
+              
+                              <div class="row mb-3">
+                                <label for="Address" class="col-md-4 col-lg-3 col-form-label">Address</label>
+                                <div class="col-md-8 col-lg-9">
+                                  <input name="address" type="text" class="form-control" id="Address" value="{{user.address}}">
+                                </div>
+                              </div>
+              
+                              <div class="row mb-3">
+                                <label for="date_of_birth" class="col-md-4 col-lg-3 col-form-label">Date of birth</label>
+                                <div class="col-md-8 col-lg-9">
+                                  <input name="date_of_birth" type="date" class="form-control" id="date_of_birth"
+                                    value="{{user.date_of_birth}}">
+                                </div>
+                              </div>
+
+
+                              {% if me.role != 'staff' %}
+                              <div class="row mb-3">
+                                <label for="role" class="col-md-4 col-lg-3 col-form-label">Role</label>
+                                <div class="col-md-8 col-lg-9">
+                                  <select class="form-control" name="role" id="role">
+                                    {% if me.role=='local_manager' %}
+                                      <option value="staff" {% if user.role=='staff' %}selected{% endif %}>Staff</option>
+                                      <option value="customer" {% if user.role=='customer' %}selected{% endif %}>Customer</option>
+                                    {% endif %}
+
+                                    {% if me.role=='national_manager' %}
+                                      <option value="local_manager" {% if user.role=='local_manager' %}selected{% endif %}>Local Manager</option>
+                                      <option value="staff" {% if user.role=='staff' %}selected{% endif %}>Staff</option>
+                                      <option value="customer" {% if user.role=='customer' %}selected{% endif %}>Customer</option>
+                                    {% endif %}
+
+                                    {% if me.role=='admin' %}
+                                      <option value="admin" {% if user.role=='admin' %}selected{% endif %}>System Admin</option>
+                                      <option value="national_manager" {% if user.role=='national_manager' %}selected{% endif %}>National Manager</option>
+                                      <option value="local_manager" {% if user.role=='local_manager' %}selected{% endif %}>Local Manager</option>
+                                      <option value="staff" {% if user.role=='staff' %}selected{% endif %}>Staff</option>
+                                      <option value="customer" {% if user.role=='customer' %}selected{% endif %}>Customer</option>
+                                    {% endif %}
+                                  </select>
+                                </div>
+                              </div>
+                              {% endif %}
+                  
+                              <div class="text-center">
+                                <button type="submit" class="btn btn-primary">Update</button>
+                                <a href="{{ url_for('web.admin_update_password', id=user.id) }}" class="btn btn-primary">Change Password</a>
+                              </div>
+
+                          </form><!-- End Profile Edit Form -->
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+{% endblock %}

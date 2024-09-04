@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <!-- theme meta -->
+    <meta name="theme-name" content="quixlab" />
+
+    <title>Content Managment System</title>
+    <!-- Favicon icon -->
+    <link rel="shortcut icon" type="image/png" href="/static/img/favicon.png">
+    <!-- Pignose Calender -->
+    <link href="/static/plugins/pg-calendar/css/pignose.calendar.min.css" rel="stylesheet">
+
+    <!-- Chartist -->
+    <link rel="stylesheet" href="/static/plugins/chartist/css/chartist.min.css">
+    <link rel="stylesheet" href="/static/plugins/chartist-plugin-tooltips/css/chartist-plugin-tooltip.css">
+    <!-- Custom Stylesheet -->
+    <link href="static/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/css/style-admin.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+</head>
+
+<body>
+    <section class="position-fixed top-6 end-1 z-index-2" style="z-index: 9999;">
+        <!-- Handle messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        {% for category, message in messages %}
+        <div class="alert alert-{{ category }} alert-dismissible text-{{ category }}" role="alert">
+            <span class="text-sm">{{ message }}</span>
+            <button type="button" class="btn btn-close text-lg py-3 opacity-10" data-bs-dismiss="alert"
+                aria-label="Close">
+                <span aria-hidden="true"></span>
+            </button>
+        </div>
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
+    </section>
+
+
+    <div id="preloader">
+        <div class="loader">
+            <svg class="circular" viewBox="25 25 50 50">
+                <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="3" stroke-miterlimit="10" />
+            </svg>
+        </div>
+    </div>
+
+    <div id="main-wrapper">
+
+        <div class="nav-header" style="height: auto;">
+            <div class="brand-logo">
+                <a href="">
+                    <b class="logo-abbr"><img src="/static/images/logo.png" alt=""> </b>
+                    <span class="logo-compact"><img src="/static/images/logo-compact.png" alt=""></span>
+                    <span class="brand-title">
+                        <h3 class="text-white">Shopping CMS </h3>
+                    </span>
+                </a>
+            </div>
+        </div>
+
+        <div class="header">
+            <div class="header-content clearfix">
+
+                <div class="nav-control">
+                    <div class="hamburger">
+                        <span class="toggle-icon"><i class="icon-menu"></i></span>
+                    </div>
+                </div>
+                <div class="header-left">
+                    <div class="input-group icons">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text bg-transparent border-0 pr-2 pr-sm-3" id="basic-addon1"><i
+                                    class="mdi mdi-magnify"></i></span>
+                        </div>
+                        <input type="search" class="form-control" placeholder="Search Dashboard"
+                            aria-label="Search Dashboard">
+                        <div class="drop-down animated flipInX d-md-none">
+                            <form action="#">
+                                <input type="text" class="form-control" placeholder="Search">
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="header-right">
+                    <ul class="clearfix">
+                        <li class="icons dropdown">
+                            <a href="javascript:void(0)" data-toggle="dropdown">
+                                <i class="mdi mdi-email-outline"></i>
+                                {% if recent_messages_count > 0 %}
+                                <span class="badge badge-pill gradient-1">{{ recent_messages_count }}</span>
+                                {% endif %}
+                            </a>
+                            <div class="drop-down animated fadeIn dropdown-menu">
+                                <div class="dropdown-content-heading d-flex justify-content-between">
+                                    <span class="">{{ recent_messages_count }} New Messages</span>
+                                    <a href="javascript:void()" class="d-inline-block">
+                                        <span class="badge badge-pill gradient-1">{{ recent_messages_count }}</span>
+                                    </a>
+                                </div>
+                                <div class="dropdown-content-body">
+                                    <ul>
+                                        {% for message in recent_messages %}
+                                        <li class="notification-unread">
+                                            <a
+                                                href="{{url_for('web.admin_message_reply_detail', message_id=message.id)}}">
+                                                <img class="float-left mr-3 avatar-img"
+                                                    src="/static/images/avatar/1.jpg" alt="">
+                                                <div class="notification-content">
+                                                    <div class="notification-heading">{{ message.sender_name }}</div>
+                                                    <div class="notification-timestamp">{{ message.created_at }}</div>
+                                                    <div class="notification-text">{{ message.content }}</div>
+                                                </div>
+                                            </a>
+                                        </li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="icons dropdown">
+                            <div class="user-img c-pointer position-relative" data-toggle="dropdown">
+                                <span class="activity active"></span>
+                                {% if not me.profile_image %}
+                                <img src="/static/images/user/form-user.png" height="40" width="40" alt="">
+                                {% else %}
+                                <img src="{{me.profile_image}}" height="40" width="40" alt="">
+                                {% endif %}
+                            </div>
+                            <div class="drop-down dropdown-profile animated fadeIn dropdown-menu">
+                                <div class="dropdown-content-body">
+                                    <ul>
+                                        <li>
+                                            <a href="{{url_for('web.home')}}"><i class="icon-home"></i>
+                                                <span>Home</span></a>
+                                        </li>
+                                        <hr class="my-2">
+                                        <li>
+                                            <a href="{{url_for('web.profile')}}"><i class="icon-user"></i>
+                                                <span>Profile</span></a>
+                                        </li>
+                                        <hr class="my-2">
+                                        <!-- <li>
+                                            <a href="javascript:void()">
+                                                <i class="icon-envelope-open"></i> <span>Inbox</span>
+                                                <div class="badge gradient-3 badge-pill gradient-1">3</div>
+                                            </a>
+                                        </li> -->
+
+                                        <!-- <hr class="my-2"> -->
+                                        <li><a href="{{ url_for('web.logout') }}"><i class="icon-key"></i>
+                                                <span>Logout</span></a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Sidebar:
+staff:
+local manager:
+national manager:
+admin:
+ -->
+        {% if me.role != 'customer' %}
+        <div class="nk-sidebar">
+            <div class="nk-nav-scroll">
+                <ul class="metismenu" id="menu">
+                    <li>
+                        <a href="javascript:void()" aria-expanded="false">
+                            <i class="icon-compass menu-icon"></i><span class="nav-text">
+                                {% if me.role == 'admin' %}Welcome Admin
+                                {% elif me.role == 'national_manager' %}Welcome National Manager
+                                {% elif me.role == 'local_manager' %}Welcome Local Manager
+                                {% endif %}
+                            </span>
+                        </a>
+                    </li>
+
+
+                    <li>
+                        <a href="{{url_for('web.profile')}}" aria-expanded="false">
+                            <i class="icon-note menu-icon"></i><span class="nav-text">My Profile</span>
+                        </a>
+                    </li>
+
+
+                    <li>
+                        <a class="has-arrow" href="javascript:void()" aria-expanded="false">
+                            <i class="icon-people menu-icon"></i><span class="nav-text">User Management</span>
+                        </a>
+                        <ul aria-expanded="false">
+                            <li><a href="{{ url_for('web.admin_customer_list') }}" aria-expanded="false">View Customer
+                                    List</a></li>
+                            {% if me.role != 'staff' %}
+                            <li><a href="{{ url_for('web.admin_customers') }}" aria-expanded="false">Manage Customer</a>
+                            </li>
+                            <li><a href="{{ url_for('web.admin_staffs') }}" aria-expanded="false">Manage Staff</a></li>
+                            {% if me.role == 'admin' or me.role == 'national_manager' %}
+                            <li><a href="{{ url_for('web.admin_local_managers') }}" aria-expanded="false">Manage Local
+                                    Manager</a></li>
+                            {% endif %}
+                            {% if me.role == 'admin' %}
+                            <li><a href="{{ url_for('web.admin_national_managers') }}" aria-expanded="false">Manage
+                                    National Manager</a></li>
+                            {% endif %}
+                            <li><a href="{{ url_for('web.add_user') }}" aria-expanded="false">Add User</a></li>
+                            {% endif %}
+                        </ul>
+                    </li>
+
+                    {% if me.role == 'staff' %}
+                    <li>
+                        <a class="has-arrow" href="javascript:void()" aria-expanded="false">
+                            <i class="icon-layers"></i><span class="nav-text">Daily Schedule</span>
+                        </a>
+                        <ul aria-expanded="false">
+                            <li><a href="{{ url_for('web.admin_daily_schedule') }} " aria-expanded="false">View Daily
+                                    Schedule List</a></li>
+                        </ul>
+                    </li>
+                    {% endif %}
+
+                    <li>
+                        <a class="has-arrow" href="javascript:void()" aria-expanded="false">
+                            <i class="icon-list menu-icon"></i><span class="nav-text">Booking Management</span>
+                        </a>
+                        <ul aria-expanded="false">
+                            <li><a href="/admin_booking_list" aria-expanded="false">Booking List</a></li>
+                        </ul>
+                    </li>
+
+
+                    <li>
+                        <a class="has-arrow" href="javascript:void()" aria-expanded="false">
+                            <i class="icon-notebook menu-icon"></i><span class="nav-text">Equipment Managment</span>
+                        </a>
+                        <ul aria-expanded="false">
+                            <li><a href="{{ url_for('web.inventory_list') }}" aria-expanded="false">Manage Inventory</a>
+                            </li>
+                            <li><a href="{{ url_for('web.equipment_list') }}" aria-expanded="false">Manage Equipment</a>
+                            </li>
+                            <li><a href="{{ url_for('web.add_inventory') }}" aria-expanded="false">Add New Equipment</a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <li>
+                        <a href="{{ url_for('web.service_list') }}" aria-expanded="false">
+                            <i class="icon-note menu-icon"></i><span class="nav-text">Service Management</span>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="{{ url_for('web.admin_message_list') }}" aria-expanded="false">
+                            <i class="icon-support menu-icon"></i><span class="nav-text">Feedback & Reply</span>
+                        </a>
+                    </li>
+
+                    {% if me.role == 'local_manager' or me.role == 'national_manager' or me.role == 'admin' %}
+                    <li>
+                         <a href="{{ url_for('web.admin_news') }}" aria-expanded="false">
+                            <i class="icon-film menu-icon"></i><span class="nav-text">Manage News</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ url_for('web.admin_promotion') }}" aria-expanded="false">
+                            <i class="icon-film menu-icon"></i><span class="nav-text">Manage Promotions</span>
+                        </a>
+                    </li>
+                    {% endif %}
+
+
+                    {% if me.role == 'local_manager' or me.role == 'national_manager' or me.role == 'admin' %}
+                    <li>
+                        <a class="has-arrow" href="javascript:void()" aria-expanded="false">
+                            <i class="icon-docs menu-icon"></i><span class="nav-text">Manage Reports</span>
+                        </a>
+                        <ul aria-expanded="false">
+                            <li><a href="{{ url_for('web.generate_report') }}" aria-expanded="false">Generate Report</a>
+                            </li>
+                        </ul>
+                    </li>
+                    {% endif %}
+
+
+                    {% if me.role == 'admin' %}
+                    <li>
+                        <a class="has-arrow" href="javascript:void()" aria-expanded="false">
+                            <i class="icon-grid menu-icon"></i><span class="nav-text">System Setting</span>
+                        </a>
+                        <ul aria-expanded="false">
+                            <li><a href="{{ url_for('web.category_list') }}" aria-expanded="false">Manage Category</a>
+                            </li>
+                            <li><a href="{{ url_for('web.type_list') }}" aria-expanded="false">Manage Type</a>
+                            </li>                            
+                        </ul>
+                    </li>
+                    
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="content-body">
+
+            {% block admin_content %}{% endblock %}
+
+        </div>
+
+
+        <div class="footer">
+            <div class="copyright">
+                <p>Developed by Group <strong>Hexadec</strong></p>
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/plugins/common/common.min.js"></script>
+    <script src="/static/js/custom.min.js"></script>
+    <script src="/static/js/settings.js"></script>
+    <script src="/static/js/gleek.js"></script>
+    <script src="/static/js/styleSwitcher.js"></script>
+    <script src="/static/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <!-- Chartjs -->
+    <script src="/static/plugins/chart.js/Chart.bundle.min.js"></script>
+    <!-- Circle progress -->
+    <script src="/static/plugins/circle-progress/circle-progress.min.js"></script>
+    <!-- Datamap -->
+    <script src="/static/plugins/d3v3/index.js"></script>
+    <script src="/static/plugins/topojson/topojson.min.js"></script>
+    <!-- Morrisjs -->
+    <script src="/static/plugins/raphael/raphael.min.js"></script>
+    <script src="/static/plugins/morris/morris.min.js"></script>
+    <!-- Pignose Calender -->
+    <script src="/static/plugins/moment/moment.min.js"></script>
+    <script src="/static/plugins/pg-calendar/js/pignose.calendar.min.js"></script>
+    <!-- ChartistJS -->
+    <script src="/static/plugins/chartist/js/chartist.min.js"></script>
+    <script src="/static/plugins/chartist-plugin-tooltips/js/chartist-plugin-tooltip.min.js"></script>
+    <script src="/static/plugins/validation/jquery.validate.min.js"></script>
+    <script src="/static/plugins/validation/jquery.validate-init.js"></script>
+
+    <script src="/static/plugins/tables/js/jquery.dataTables.min.js"></script>
+    <script src="/static/plugins/tables/js/datatable/dataTables.bootstrap4.min.js"></script>
+    <script src="/static/plugins/tables/js/datatable-init/datatable-basic.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/dayjs@1/dayjs.min.js"></script>
+
+    <script>
+        window.addEventListener('DOMContentLoaded', (event) => {
+            setTimeout(() => {
+                const alerts = document.querySelectorAll('.alert');
+                alerts.forEach(alert => {
+                    $(alert).fadeOut('slow', function () {
+                        $(this).remove();
+                    });
+                });
+            }, 8000); // hide alert in 8 seconds
+        });
+
+        $(document).ready(function () {
+            $('.nz-date-time').each(function () {
+                var dateText1 = $(this).text();
+                var formattedDate1 = `${new Date(dateText1).toLocaleDateString()} ${new Date(dateText1).toLocaleTimeString()}`;;
+                $(this).text(formattedDate1);
+            });
+        });
+
+
+        $(document).ready(function () {
+            $('.nz-date').each(function () {
+                var dateText = $(this).text();
+                var formattedDate = new Date(dateText).toLocaleDateString();
+                $(this).text(formattedDate);
+            });
+        });
+    </script>
+</body>
+
+</html>

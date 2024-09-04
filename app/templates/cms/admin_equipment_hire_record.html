@@ -1,0 +1,67 @@
+{% extends 'base_admin.html' %}
+{% block admin_content %}
+
+<div class="row page-titles mx-0">
+    <div class="col p-md-0">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ url_for('web.admin_home') }}">Dashboard</a></li>
+            <li class="breadcrumb-item active"><a href="{{ url_for('web.home') }}">Home</a></li>
+            <li class="breadcrumb-item active"><a href="{{ url_for('web.equipment_list') }}">Equipment List</a></li>
+        </ol>
+    </div>
+</div>
+<!-- row -->
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                      <div class="d-flex justify-content-between card-body-1">
+                         <h4 class="card-title">Hire Record for {{ equipment.name }}: {{ equipment.equipment_serial_number }}</h4>
+                         <!-- <div class="text-end">
+                          <a href="">
+                            <button type="submit" class="btn btn-primary">Add New Equipment</button>
+                          </a>
+                        </div> -->
+                      </div>
+
+                    <!-- TO DO -->
+                    <!-- <div class="tab-content pt-2">
+                      <form action="" method="GET" class="search-form">
+                        <input class="search-form input" type="text" id="search" name="query" placeholder="Search by inventory's serial number or status"
+                          size="50">
+                        <button type="submit" class="btn">Search</button>
+                      </form>
+                    </div> -->
+                    
+                    {% if booking_record %}
+                     <div class="table-responsive">
+                        <table class="table table-striped table-bordered zero-configuration">
+                            <thead>
+                              <tr>
+                                <th>Hire Start Date</th>
+                                <th>Hire End Date</th>
+                                <th>Booking Created Date</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr>
+                            
+                            <td class="nz-date">{{ booking_record.hire_start }}</td>
+                            <td class="nz-date">{{ booking_record.hire_end }}</td>
+                            <td class="nz-date">{{ booking_record.created_at }}</td>
+                            
+                            
+                              </tr>
+                            </tbody>
+                      </table>
+                  </div>
+                  {% else %} <br><h6>No booking yet</h6>
+                  {% endif %}
+              </div>
+          </div>
+      </div>
+  </div>
+</div>
+
+{% endblock %}

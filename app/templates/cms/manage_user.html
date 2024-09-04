@@ -1,0 +1,67 @@
+{% extends 'base_admin.html' %}
+{% block title %}Manage users{% endblock %}
+{% block content %}
+<div class="shadow p-3 mb-5 bg-body rounded">
+  <p class="lead">Manage</p>
+  <div class="row">
+    <div class="col-auto me-auto">
+      <a href="{{ url_for('users_bp.manager_add') }}" class="btn btn-primary mb-3">Add new</a>
+    </div>
+    <div class="col-auto">
+    </div>
+   </div>
+  <div class="table-responsive">
+    <table id="data" class="table table-striped">
+      <thead>
+        <tr>
+          <th>User ID</th>
+          <th>Branch</th>
+          <th>Username</th>
+          <th>First Name</th>
+          <th>Last Name</th>
+          <th>Position</th>
+          <th>Phone</th>
+          <th>Email</th>
+          <th>Edit</th>
+          <th>Delete</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for user in users %}
+        <tr>
+          <td>{{ user[0] }}</td>
+          <td>{{ user[1] }}</td>
+          <td>{{ user[7] }}</td>
+          <td>{{ user[2] }}</td>
+          <td>{{ user[3] }}</td>
+          <td>{{ user[4] }}</td>
+          <td>{{ user[5] }}</td>
+          <td><a href="{{ url_for('web.admin_users', user_id=user[0])}}">Edit</a></td>
+          <td><a href="{{ url_for('web.delete', user_id=user[0])}}">Delete</a></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  $(document).ready(function () {
+    $('#data').DataTable({
+      columns: [
+        { orderable: false, searchable: false },
+        { orderable: false, searchable: false },
+        { orderable: false, searchable: false },
+        { orderable: true, searchable: true },
+        { orderable: false, searchable: false },
+        { orderable: false, searchable: false },
+        { orderable: false, searchable: false },
+        null,
+        null
+      ],
+    });
+  });
+</script>
+{% endblock %}
