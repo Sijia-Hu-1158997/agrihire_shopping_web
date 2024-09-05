@@ -75,7 +75,7 @@ Enables communication between customers and staff for inquiries and damage repor
 ## Project Layout
 This Flask project uses Blueprints to organize and manage its structure effectively. Blueprints help encapsulate functionality into reusable components, such as views, templates, and other resources. This modular approach simplifies the development process and enhances code maintainability.
 Here is the main structure of the project:
-
+```bash
 agrihire/
 |
 ├── static/
@@ -94,7 +94,7 @@ agrihire/
 ├── server.py
 ├── db.sql
 └── pipfile
-
+```
 
 ## Database Design
 - General Design:
